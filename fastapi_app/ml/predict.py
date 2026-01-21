@@ -5,6 +5,7 @@ from pathlib import Path
 from core.config import settings
 from core.logging import get_logger
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 
 logger = get_logger(__name__)
 
@@ -46,7 +47,7 @@ class FraudPredictor:
     
     def _create_dummy_model(self):
         """Create dummy model for testing (replace with actual trained model)."""
-        from sklearn.ensemble import RandomForestClassifier
+        
         
         logger.warning("Using dummy model - train and save a real model for production!")
         self.model = RandomForestClassifier(n_estimators=10, random_state=42)
