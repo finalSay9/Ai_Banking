@@ -25,21 +25,19 @@ services:
 
   django_app:
     build:
-      context: .
-      dockerfile: django_app/Dockerfile
+      context: ./django_app
+      dockerfile: Dockerfile
     container_name: fraud_django
-    environment:
-      DJANGO_SETTINGS_MODULE: core.settings.dev
-
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    command: >
+      gunicorn core.wsgi:application
+      --bind 0.0.0.0:8000
+      --workers ${GUNICORN_WORKERS:-3}
     volumes:
       - ./django_app:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     env_file:
       - .env
-    ports:
-      - "8000:8000"   # dev only
     depends_on:
       db:
         condition: service_healthy
@@ -48,10 +46,10 @@ services:
 
   celery_worker:
     build:
-      context: .
-      dockerfile: django_app/Dockerfile
+      context: ./django_app
+      dockerfile: Dockerfile
     container_name: fraud_celery_worker
-    command: celery -A core worker -l info
+    command: celery -A core worker --loglevel=info
     volumes:
       - ./django_app:/app
     env_file:
@@ -66,10 +64,10 @@ services:
 
   celery_beat:
     build:
-      context: .
-      dockerfile: django_app/Dockerfile
+      context: ./django_app
+      dockerfile: Dockerfile
     container_name: fraud_celery_beat
-    command: celery -A core beat -l info
+    command: celery -A core beat --loglevel=info
     volumes:
       - ./django_app:/app
       - celery_beat_data:/app/celerybeat
@@ -85,16 +83,15 @@ services:
 
   fastapi_app:
     build:
-      context: .
-      dockerfile: fastapi_app/Dockerfile
+      context: ./fastapi_app
+      dockerfile: Dockerfile
     container_name: fraud_fastapi
-    command: uvicorn main:app --host 0.0.0.0 --port 8001
-    volumes:
-      - ./fastapi_app:/app
+    command: >
+      uvicorn main:app
+      --host 0.0.0.0
+      --port 8001
     env_file:
       - .env
-    ports:
-      - "8001:8001"   # dev only
     depends_on:
       redis:
         condition: service_healthy
@@ -104,6 +101,7 @@ services:
     container_name: fraud_nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/staticfiles

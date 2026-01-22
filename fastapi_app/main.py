@@ -7,7 +7,7 @@ import time
 import uvicorn
 from core.config import settings
 from core.logging import setup_logging, get_logger
-from api.v1.router import api_router
+from api.v1.endpoints.router import api_router
 
 # Setup logging
 setup_logging(level="INFO" if not settings.DEBUG else "DEBUG")

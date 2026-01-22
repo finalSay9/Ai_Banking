@@ -2,8 +2,11 @@ import logging
 import requests
 from typing import Dict, Any, Tuple
 from decimal import Decimal
+from django.contrib.auth import get_user_model
+from .models import CaseNote
 from datetime import datetime, timedelta
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils import timezone
 from .models import Transaction, FraudCase, Alert, FraudPattern
@@ -265,7 +268,7 @@ class FraudCaseService:
     @staticmethod
     def assign_case(case_id: int, user_id: int) -> FraudCase:
         """Assign fraud case to analyst."""
-        from django.contrib.auth import get_user_model
+      
         User = get_user_model()
         
         case = FraudCase.objects.get(id=case_id)
@@ -297,8 +300,7 @@ class FraudCaseService:
     @staticmethod
     def add_case_note(case_id: int, user_id: int, note: str, is_internal: bool = True):
         """Add investigation note to case."""
-        from django.contrib.auth import get_user_model
-        from .models import CaseNote
+        
         User = get_user_model()
         
         case = FraudCase.objects.get(id=case_id)

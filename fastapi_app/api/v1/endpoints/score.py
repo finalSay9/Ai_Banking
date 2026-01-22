@@ -18,11 +18,11 @@ scoring_service = FraudScoringService()
     response_model=PredictionResponse,
     summary="Score single transaction",
     description="Analyze a single transaction and return fraud score"
-)
+    )
 async def score_transaction(
     transaction: TransactionInput,
     api_key: str = Depends(verify_api_key)
-):
+    ):
     """
     Score a single transaction for fraud detection.
     
@@ -37,17 +37,19 @@ async def score_transaction(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to score transaction: {str(e)}"
         )
+    
+
 
 @router.post(
     "/score/detailed",
     response_model=DetailedPredictionResponse,
     summary="Score with explanation",
     description="Score transaction with feature importance and explanations"
-)
+    )
 async def score_transaction_detailed(
     transaction: TransactionInput,
     api_key: str = Depends(verify_api_key)
-):
+   ):
     """
     Score transaction with detailed explanation.
     
@@ -63,15 +65,17 @@ async def score_transaction_detailed(
             detail=f"Failed to score transaction: {str(e)}"
         )
 
+
+
 @router.post(
     "/score/batch",
     summary="Batch score transactions",
     description="Score multiple transactions in a single request"
-)
+   )
 async def score_transactions_batch(
     batch: BulkTransactionInput,
     api_key: str = Depends(verify_api_key)
-):
+   ):
     """
     Score multiple transactions in batch.
     
@@ -114,6 +118,8 @@ async def score_transactions_batch(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Batch scoring failed: {str(e)}"
         )
+
+
 
 @router.post(
     "/score/async",
