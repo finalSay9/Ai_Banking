@@ -1,10 +1,10 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from .models import ForensicInvestigation
-from common.permissions import IsAuditor
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ForensicInvestigationViewSet
 
-class ForensicInvestigationViewSet(viewsets.ModelViewSet):
-    queryset = ForensicInvestigation.objects.all()
-    permission_classes = [IsAuthenticated, IsAuditor]
-    
-    # Add serializers and methods as needed
+router = DefaultRouter()
+router.register('investigations', ForensicInvestigationViewSet, basename='forensic-investigation')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]

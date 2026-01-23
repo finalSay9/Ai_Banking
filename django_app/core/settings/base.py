@@ -25,10 +25,11 @@ INSTALLED_APPS = [
     'drf_spectacular',
     
     # Local apps
-    'apps.users',
+    
     'apps.fraud',
     'apps.risk',
     'apps.audits',
+    'apps.users',
 ]
 
 MIDDLEWARE = [

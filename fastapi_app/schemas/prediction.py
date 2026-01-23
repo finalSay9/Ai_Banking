@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Dict, Any, List, Optional
 from datetime import datetime
 
@@ -14,7 +14,9 @@ class PredictionResponse(BaseModel):
     processing_time_ms: float = Field(..., description="Processing time in milliseconds")
     timestamp: datetime = Field(default_factory=datetime.now, description="Prediction timestamp")
     
-    class Config:
+   
+
+    model_config = ConfigDict(
         json_schema_extra = {
             "example": {
                 "fraud_score": 0.85,
@@ -25,7 +27,9 @@ class PredictionResponse(BaseModel):
                 "processing_time_ms": 45.2,
                 "timestamp": "2026-01-21T16:00:00Z"
             }
-        }
+        },
+        protected_namespaces=()
+    )
 
 class DetailedPredictionResponse(PredictionResponse):
     """Extended response with feature explanations."""

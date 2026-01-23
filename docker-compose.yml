@@ -30,8 +30,7 @@ services:
     container_name: fraud_django
     environment:
       DJANGO_SETTINGS_MODULE: core.settings.dev
-
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 3
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./django_app:/app
       - static_volume:/app/staticfiles
@@ -39,7 +38,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000"   # dev only
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -51,7 +50,7 @@ services:
       context: .
       dockerfile: django_app/Dockerfile
     container_name: fraud_celery_worker
-    command: celery -A core worker -l info
+    command: celery -A core worker -l info --pool=solo
     volumes:
       - ./django_app:/app
     env_file:
@@ -88,13 +87,13 @@ services:
       context: .
       dockerfile: fastapi_app/Dockerfile
     container_name: fraud_fastapi
-    command: uvicorn main:app --host 0.0.0.0 --port 8001
+    command: uvicorn main:app --host 0.0.0.0 --port 8001 --reload
     volumes:
       - ./fastapi_app:/app
     env_file:
       - .env
     ports:
-      - "8001:8001"   # dev only
+      - "8001:8001"
     depends_on:
       redis:
         condition: service_healthy
