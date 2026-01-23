@@ -10,26 +10,29 @@ ALLOWED_HOSTS = config('DJANGO_ALLOWED_HOSTS', default='').split(',')
 
 # Application definition
 INSTALLED_APPS = [
+    # 🔴 Custom user app MUST be first
+    'apps.users',
+
+    # Django core
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # Third party
+
+    # Third-party
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
     'drf_spectacular',
-    
-    # Local apps
-    
+
+    # Local apps (that may reference User)
     'apps.fraud',
     'apps.risk',
     'apps.audits',
-    'apps.users',
+    
 ]
 
 MIDDLEWARE = [
@@ -103,6 +106,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
+
 
 # REST Framework
 REST_FRAMEWORK = {
